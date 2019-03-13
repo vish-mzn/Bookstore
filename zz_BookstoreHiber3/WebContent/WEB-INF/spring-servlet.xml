@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"    
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"    
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:tx="http://www.springframework.org/schema/tx"    
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"    
+    xsi:schemaLocation="http://www.springframework.org/schema/beans    
+	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd    
+	http://www.springframework.org/schema/context    
+	http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	http://www.springframework.org/schema/mvc  
+    http://www.springframework.org/schema/mvc/spring-mvc.xsd
+    http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx.xsd">    
+  
+<!-- Provide support for component scanning -->
+<context:component-scan base-package="com.Project"></context:component-scan>
+
+<!--Provide support for conversion, formatting and validation -->
+<mvc:annotation-driven/>
+  
+<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">  
+	<property name="prefix" value="/WEB-INF/jsp/"></property>  
+	<property name="suffix" value=".jsp"></property>  
+</bean>
+
+<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+	<property name="url" value="jdbc:mysql://localhost:3306/bookstorehibernate1" />
+	<property name="username" value="root" />
+	<property name="password" value="root" />
+</bean>
+
+<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+			p:packagesToScan="com.Project" p:dataSource-ref="dataSource">
+	<property name="jpaVendorAdapter">
+		<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+			<property name="generateDdl" value="true" />
+			<property name="showSql" value="true" />
+		</bean>
+	</property>
+</bean>
+  
+	<!-- Transactions -->
+<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+	<property name="entityManagerFactory" ref="entityManagerFactory" />
+</bean>
+
+	<!-- enable the configuration of transactional behavior based on annotations -->
+<tx:annotation-driven transaction-manager="transactionManager" />
+
+
+</beans>  
